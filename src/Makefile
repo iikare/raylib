@@ -497,7 +497,7 @@ ifeq ($(PLATFORM),PLATFORM_DESKTOP)
         ifeq ($(CC), tcc)
             LDLIBS = -lopengl32 -lgdi32 -lwinmm -lshell32
         else
-            LDLIBS = -static-libgcc -lopengl32 -lgdi32 -lwinmm
+            LDLIBS = -static-libgcc -lopengl32 -lgdi32 -lwinmm -static -lpthread
         endif
     endif
     ifeq ($(PLATFORM_OS),LINUX)
@@ -584,7 +584,7 @@ else
         ifeq ($(PLATFORM),PLATFORM_DESKTOP)
             ifeq ($(PLATFORM_OS),WINDOWS)
                 # NOTE: Linking with provided resource file
-				$(CC) -shared -o $(RAYLIB_RELEASE_PATH)/$(RAYLIB_LIB_NAME).dll $(OBJS) $(RAYLIB_RES_FILE) $(LDFLAGS) $(LDLIBS)
+				$(CC) -shared -o $(RAYLIB_RELEASE_PATH)/$(RAYLIB_LIB_NAME).dll $(OBJS) $(LDFLAGS) $(LDLIBS)
 				@echo "raylib dynamic library ($(RAYLIB_LIB_NAME).dll) and import library (lib$(RAYLIB_LIB_NAME)dll.a) generated!"
             endif
             ifeq ($(PLATFORM_OS),LINUX)
