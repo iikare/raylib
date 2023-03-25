@@ -477,10 +477,10 @@ int rl_save_ktx(const char *file_name, void *data, int width, int height, int fo
     // Calculate file data_size required
     int data_size = sizeof(ktx_header);
 
-    for (int i = 0, width = width, height = height; i < mipmaps; i++)
+    for (int i = 0, w = width, h = height; i < mipmaps; i++)
     {
-        data_size += get_pixel_data_size(width, height, format);
-        width /= 2; height /= 2;
+        data_size += get_pixel_data_size(w, h, format);
+        w /= 2; h /= 2;
     }
 
     unsigned char *file_data = RL_CALLOC(data_size, 1);
@@ -778,28 +778,28 @@ static int get_pixel_data_size(int width, int height, int format)
 
     switch (format)
     {
-    case PIXELFORMAT_UNCOMPRESSED_GRAYSCALE: bpp = 8; break;
-    case PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA:
-    case PIXELFORMAT_UNCOMPRESSED_R5G6B5:
-    case PIXELFORMAT_UNCOMPRESSED_R5G5B5A1:
-    case PIXELFORMAT_UNCOMPRESSED_R4G4B4A4: bpp = 16; break;
-    case PIXELFORMAT_UNCOMPRESSED_R8G8B8A8: bpp = 32; break;
-    case PIXELFORMAT_UNCOMPRESSED_R8G8B8: bpp = 24; break;
-    case PIXELFORMAT_UNCOMPRESSED_R32: bpp = 32; break;
-    case PIXELFORMAT_UNCOMPRESSED_R32G32B32: bpp = 32*3; break;
-    case PIXELFORMAT_UNCOMPRESSED_R32G32B32A32: bpp = 32*4; break;
-    case PIXELFORMAT_COMPRESSED_DXT1_RGB:
-    case PIXELFORMAT_COMPRESSED_DXT1_RGBA:
-    case PIXELFORMAT_COMPRESSED_ETC1_RGB:
-    case PIXELFORMAT_COMPRESSED_ETC2_RGB:
-    case PIXELFORMAT_COMPRESSED_PVRT_RGB:
-    case PIXELFORMAT_COMPRESSED_PVRT_RGBA: bpp = 4; break;
-    case PIXELFORMAT_COMPRESSED_DXT3_RGBA:
-    case PIXELFORMAT_COMPRESSED_DXT5_RGBA:
-    case PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA:
-    case PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA: bpp = 8; break;
-    case PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA: bpp = 2; break;
-    default: break;
+        case PIXELFORMAT_UNCOMPRESSED_GRAYSCALE: bpp = 8; break;
+        case PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA:
+        case PIXELFORMAT_UNCOMPRESSED_R5G6B5:
+        case PIXELFORMAT_UNCOMPRESSED_R5G5B5A1:
+        case PIXELFORMAT_UNCOMPRESSED_R4G4B4A4: bpp = 16; break;
+        case PIXELFORMAT_UNCOMPRESSED_R8G8B8A8: bpp = 32; break;
+        case PIXELFORMAT_UNCOMPRESSED_R8G8B8: bpp = 24; break;
+        case PIXELFORMAT_UNCOMPRESSED_R32: bpp = 32; break;
+        case PIXELFORMAT_UNCOMPRESSED_R32G32B32: bpp = 32*3; break;
+        case PIXELFORMAT_UNCOMPRESSED_R32G32B32A32: bpp = 32*4; break;
+        case PIXELFORMAT_COMPRESSED_DXT1_RGB:
+        case PIXELFORMAT_COMPRESSED_DXT1_RGBA:
+        case PIXELFORMAT_COMPRESSED_ETC1_RGB:
+        case PIXELFORMAT_COMPRESSED_ETC2_RGB:
+        case PIXELFORMAT_COMPRESSED_PVRT_RGB:
+        case PIXELFORMAT_COMPRESSED_PVRT_RGBA: bpp = 4; break;
+        case PIXELFORMAT_COMPRESSED_DXT3_RGBA:
+        case PIXELFORMAT_COMPRESSED_DXT5_RGBA:
+        case PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA:
+        case PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA: bpp = 8; break;
+        case PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA: bpp = 2; break;
+        default: break;
     }
 
     data_size = width*height*bpp/8;  // Total data size in bytes
@@ -814,5 +814,4 @@ static int get_pixel_data_size(int width, int height, int format)
 
     return data_size;
 }
-
 #endif // RL_GPUTEX_IMPLEMENTATION
