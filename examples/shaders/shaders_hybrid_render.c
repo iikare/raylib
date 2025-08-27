@@ -1,6 +1,8 @@
-﻿/*******************************************************************************************
+/*******************************************************************************************
 *
-*   raylib [shaders] example - Hybrid Rendering
+*   raylib [shaders] example - write depth buffer
+*
+*   Example complexity rating: [★★★★] 4/4
 *
 *   Example originally created with raylib 4.2, last time updated with raylib 4.2
 *
@@ -9,7 +11,7 @@
 *   Example licensed under an unmodified zlib/libpng license, which is an OSI-certified,
 *   BSD-like license that allows static linking with closed source software
 *
-*   Copyright (c) 2022-2023 Buğra Alptekin Sarı (@BugraAlptekinSari)
+*   Copyright (c) 2022-2025 Buğra Alptekin Sarı (@BugraAlptekinSari)
 *
 ********************************************************************************************/
 
@@ -20,7 +22,7 @@
 
 #if defined(PLATFORM_DESKTOP)
 #define GLSL_VERSION            330
-#else   // PLATFORM_RPI, PLATFORM_ANDROID, PLATFORM_WEB
+#else   // PLATFORM_ANDROID, PLATFORM_WEB
 #define GLSL_VERSION            100
 #endif
 
@@ -59,16 +61,16 @@ int main(void)
     // You are required to write depth for all shaders if one shader does it
     Shader shdrRaster = LoadShader(0, TextFormat("resources/shaders/glsl%i/hybrid_raster.fs", GLSL_VERSION));
 
-    // Declare Struct used to store camera locs.
+    // Declare Struct used to store camera locs
     RayLocs marchLocs = {0};
 
-    // Fill the struct with shader locs.
+    // Fill the struct with shader locs
     marchLocs.camPos = GetShaderLocation(shdrRaymarch, "camPos");
     marchLocs.camDir = GetShaderLocation(shdrRaymarch, "camDir");
     marchLocs.screenCenter = GetShaderLocation(shdrRaymarch, "screenCenter");
 
-    // Transfer screenCenter position to shader. Which is used to calculate ray direction. 
-    Vector2 screenCenter = {.x = screenWidth/2.0, .y = screenHeight/2.0};
+    // Transfer screenCenter position to shader. Which is used to calculate ray direction
+    Vector2 screenCenter = {.x = screenWidth/2.0f, .y = screenHeight/2.0f};
     SetShaderValue(shdrRaymarch, marchLocs.screenCenter , &screenCenter , SHADER_UNIFORM_VEC2);
 
     // Use Customized function to create writable depth texture buffer
@@ -82,10 +84,10 @@ int main(void)
         .fovy = 45.0f,                                // Camera field-of-view Y
         .projection = CAMERA_PERSPECTIVE              // Camera projection type
     };
-    
-    // Camera FOV is pre-calculated in the camera Distance.
-    double camDist = 1.0/(tan(camera.fovy*0.5*DEG2RAD));
-    
+
+    // Camera FOV is pre-calculated in the camera distance
+    float camDist = 1.0f/(tanf(camera.fovy*0.5f*DEG2RAD));
+
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
@@ -96,14 +98,14 @@ int main(void)
         //----------------------------------------------------------------------------------
         UpdateCamera(&camera, CAMERA_ORBITAL);
 
-        // Update Camera Postion in the ray march shader.
+        // Update Camera Postion in the ray march shader
         SetShaderValue(shdrRaymarch, marchLocs.camPos, &(camera.position), RL_SHADER_UNIFORM_VEC3);
-        
-        // Update Camera Looking Vector. Vector length determines FOV.
+
+        // Update Camera Looking Vector. Vector length determines FOV
         Vector3 camDir = Vector3Scale( Vector3Normalize( Vector3Subtract(camera.target, camera.position)) , camDist);
         SetShaderValue(shdrRaymarch, marchLocs.camDir, &(camDir), RL_SHADER_UNIFORM_VEC3);
         //----------------------------------------------------------------------------------
-        
+
         // Draw
         //----------------------------------------------------------------------------------
         // Draw into our custom render texture (framebuffer)
@@ -111,12 +113,12 @@ int main(void)
             ClearBackground(WHITE);
 
             // Raymarch Scene
-            rlEnableDepthTest(); //Manually enable Depth Test to handle multiple rendering methods.
+            rlEnableDepthTest(); // Manually enable Depth Test to handle multiple rendering methods
             BeginShaderMode(shdrRaymarch);
-                DrawRectangleRec((Rectangle){0,0,screenWidth,screenHeight},WHITE);
+                DrawRectangleRec((Rectangle){0,0, (float)screenWidth, (float)screenHeight},WHITE);
             EndShaderMode();
-            
-            // Raserize Scene
+
+            // Rasterize Scene
             BeginMode3D(camera);
                 BeginShaderMode(shdrRaster);
                     DrawCubeWiresV((Vector3){ 0.0f, 0.5f, 1.0f }, (Vector3){ 1.0f, 1.0f, 1.0f }, RED);
@@ -128,11 +130,11 @@ int main(void)
             EndMode3D();
         EndTextureMode();
 
-        // Draw into screen our custom render texture 
+        // Draw into screen our custom render texture
         BeginDrawing();
             ClearBackground(RAYWHITE);
-        
-            DrawTextureRec(target.texture, (Rectangle) { 0, 0, screenWidth, -screenHeight }, (Vector2) { 0, 0 }, WHITE);
+
+            DrawTextureRec(target.texture, (Rectangle) { 0, 0, (float)screenWidth, (float)-screenHeight }, (Vector2) { 0, 0 }, WHITE);
             DrawFPS(10, 10);
         EndDrawing();
         //----------------------------------------------------------------------------------
@@ -158,7 +160,7 @@ RenderTexture2D LoadRenderTextureDepthTex(int width, int height)
 {
     RenderTexture2D target = { 0 };
 
-    target.id = rlLoadFramebuffer(width, height);   // Load an empty framebuffer
+    target.id = rlLoadFramebuffer(); // Load an empty framebuffer
 
     if (target.id > 0)
     {

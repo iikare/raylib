@@ -2,14 +2,16 @@
 *
 *   raylib [core] example - loading thread
 *
-*   NOTE: This example requires linking with pthreads library on MinGW, 
+*   Example complexity rating: [★★★☆] 3/4
+*
+*   NOTE: This example requires linking with pthreads library on MinGW,
 *   it can be accomplished passing -static parameter to compiler
 *
 *   Example originally created with raylib 2.5, last time updated with raylib 3.0
 *
 *   Example licensed under an unmodified zlib/libpng license, which is an OSI-certified,
 *
-*   Copyright (c) 2014-2023 Ramon Santamaria (@raysan5)
+*   Copyright (c) 2014-2025 Ramon Santamaria (@raysan5)
 *
 ********************************************************************************************/
 
@@ -41,7 +43,7 @@ int main(void)
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - loading thread");
 
-    pthread_t threadId;             // Loading data thread id
+    pthread_t threadId = { 0 };     // Loading data thread id
 
     enum { STATE_WAITING, STATE_LOADING, STATE_FINISHED } state = STATE_WAITING;
     int framesCounter = 0;

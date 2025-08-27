@@ -1,13 +1,15 @@
 /*******************************************************************************************
 *
-*   raylib [core] example - Storage save/load values
+*   raylib [core] example - storage save/load values
+*
+*   Example complexity rating: [★★☆☆] 2/4
 *
 *   Example originally created with raylib 1.4, last time updated with raylib 4.2
 *
 *   Example licensed under an unmodified zlib/libpng license, which is an OSI-certified,
 *   BSD-like license that allows static linking with closed source software
 *
-*   Copyright (c) 2015-2023 Ramon Santamaria (@raysan5)
+*   Copyright (c) 2015-2025 Ramon Santamaria (@raysan5)
 *
 ********************************************************************************************/
 
@@ -104,7 +106,7 @@ int main(void)
 bool SaveStorageValue(unsigned int position, int value)
 {
     bool success = false;
-    unsigned int dataSize = 0;
+    int dataSize = 0;
     unsigned int newDataSize = 0;
     unsigned char *fileData = LoadFileData(STORAGE_DATA_FILE, &dataSize);
     unsigned char *newFileData = NULL;
@@ -172,12 +174,12 @@ bool SaveStorageValue(unsigned int position, int value)
 int LoadStorageValue(unsigned int position)
 {
     int value = 0;
-    unsigned int dataSize = 0;
+    int dataSize = 0;
     unsigned char *fileData = LoadFileData(STORAGE_DATA_FILE, &dataSize);
 
     if (fileData != NULL)
     {
-        if (dataSize < (position*4)) TraceLog(LOG_WARNING, "FILEIO: [%s] Failed to find storage position: %i", STORAGE_DATA_FILE, position);
+        if (dataSize < ((int)(position*4))) TraceLog(LOG_WARNING, "FILEIO: [%s] Failed to find storage position: %i", STORAGE_DATA_FILE, position);
         else
         {
             int *dataPtr = (int *)fileData;

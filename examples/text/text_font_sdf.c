@@ -1,13 +1,15 @@
 /*******************************************************************************************
 *
-*   raylib [text] example - Font SDF loading
+*   raylib [text] example - font SDF loading
+*
+*   Example complexity rating: [★★★☆] 3/4
 *
 *   Example originally created with raylib 1.3, last time updated with raylib 4.0
 *
 *   Example licensed under an unmodified zlib/libpng license, which is an OSI-certified,
 *   BSD-like license that allows static linking with closed source software
 *
-*   Copyright (c) 2015-2023 Ramon Santamaria (@raysan5)
+*   Copyright (c) 2015-2025 Ramon Santamaria (@raysan5)
 *
 ********************************************************************************************/
 
@@ -15,7 +17,7 @@
 
 #if defined(PLATFORM_DESKTOP)
     #define GLSL_VERSION            330
-#else   // PLATFORM_RPI, PLATFORM_ANDROID, PLATFORM_WEB
+#else   // PLATFORM_ANDROID, PLATFORM_WEB
     #define GLSL_VERSION            100
 #endif
 
@@ -31,14 +33,14 @@ int main(void)
     const int screenWidth = 800;
     const int screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, "raylib [text] example - SDF fonts");
+    InitWindow(screenWidth, screenHeight, "raylib [text] example - font SDF loading");
 
     // NOTE: Textures/Fonts MUST be loaded after Window initialization (OpenGL context is required)
 
     const char msg[50] = "Signed Distance Fields";
 
     // Loading file to memory
-    unsigned int fileSize = 0;
+    int fileSize = 0;
     unsigned char *fileData = LoadFileData("resources/anonymous_pro_bold.ttf", &fileSize);
 
     // Default font generation from TTF font

@@ -1,6 +1,8 @@
-﻿/*******************************************************************************************
+/*******************************************************************************************
 *
-*   raylib [shaders] example - Depth buffer writing
+*   raylib [shaders] example - write depth buffer
+*
+*   Example complexity rating: [★★☆☆] 2/4
 *
 *   Example originally created with raylib 4.2, last time updated with raylib 4.2
 *
@@ -9,7 +11,7 @@
 *   Example licensed under an unmodified zlib/libpng license, which is an OSI-certified,
 *   BSD-like license that allows static linking with closed source software
 *
-*   Copyright (c) 2022-2023 Buğra Alptekin Sarı (@BugraAlptekinSari)
+*   Copyright (c) 2022-2025 Buğra Alptekin Sarı (@BugraAlptekinSari)
 *
 ********************************************************************************************/
 
@@ -19,7 +21,7 @@
 
 #if defined(PLATFORM_DESKTOP)
 #define GLSL_VERSION            330
-#else   // PLATFORM_RPI, PLATFORM_ANDROID, PLATFORM_WEB
+#else   // PLATFORM_ANDROID, PLATFORM_WEB
 #define GLSL_VERSION            100
 #endif
 
@@ -58,7 +60,7 @@ int main(void)
         .fovy = 45.0f,                                // Camera field-of-view Y
         .projection = CAMERA_PERSPECTIVE              // Camera projection type
     };
-    
+
     SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
@@ -69,14 +71,13 @@ int main(void)
         //----------------------------------------------------------------------------------
         UpdateCamera(&camera, CAMERA_ORBITAL);
         //----------------------------------------------------------------------------------
-        
+
         // Draw
         //----------------------------------------------------------------------------------
-        
         // Draw into our custom render texture (framebuffer)
         BeginTextureMode(target);
             ClearBackground(WHITE);
-            
+
             BeginMode3D(camera);
                 BeginShaderMode(shader);
                     DrawCubeWiresV((Vector3){ 0.0f, 0.5f, 1.0f }, (Vector3){ 1.0f, 1.0f, 1.0f }, RED);
@@ -88,11 +89,10 @@ int main(void)
             EndMode3D();
         EndTextureMode();
 
-        // Draw into screen our custom render texture 
+        // Draw into screen our custom render texture
         BeginDrawing();
             ClearBackground(RAYWHITE);
-        
-            DrawTextureRec(target.texture, (Rectangle) { 0, 0, screenWidth, -screenHeight }, (Vector2) { 0, 0 }, WHITE);
+            DrawTextureRec(target.texture, (Rectangle) { 0, 0, (float)screenWidth, (float)-screenHeight }, (Vector2) { 0, 0 }, WHITE);
             DrawFPS(10, 10);
         EndDrawing();
         //----------------------------------------------------------------------------------
@@ -117,7 +117,7 @@ RenderTexture2D LoadRenderTextureDepthTex(int width, int height)
 {
     RenderTexture2D target = { 0 };
 
-    target.id = rlLoadFramebuffer(width, height);   // Load an empty framebuffer
+    target.id = rlLoadFramebuffer(); // Load an empty framebuffer
 
     if (target.id > 0)
     {
